@@ -1,12 +1,24 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { questions } from "@/data/mockData";
 import Layout from "@/components/Layout";
 import VoteButton from "@/components/VoteButton";
 import { CheckCircle2, ArrowLeft, Eye } from "lucide-react";
+import hljs from "highlight.js";
+import "highlight.js/styles/github-dark.css";
 
 const QuestionDetail = () => {
   const { id } = useParams();
   const question = questions.find((q) => q.id === id);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block as HTMLElement);
+      });
+    }
+  });
 
   if (!question) {
     return (
@@ -23,7 +35,7 @@ const QuestionDetail = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto" ref={contentRef}>
         {/* Back */}
         <Link
           to="/"
@@ -147,8 +159,8 @@ function renderBody(text: string) {
     if (part.startsWith("```")) {
       const code = part.replace(/```\w*\n?/, "").replace(/```$/, "");
       return (
-        <pre key={i} className="my-3 overflow-x-auto rounded-md bg-code p-3 text-xs font-mono text-primary/90 border border-border">
-          <code>{code.trim()}</code>
+        <pre key={i} className="my-3 overflow-x-auto rounded-md bg-code p-3 text-xs font-mono border border-border">
+          <code className="!bg-transparent !p-0">{code.trim()}</code>
         </pre>
       );
     }
