@@ -39,15 +39,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl">
         <div className="container flex h-14 items-center gap-3">
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-              <Code2 className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img src="/logo vert.png" alt="DevGroup Community" className="h-8 w-auto" />
             <span className="font-mono text-lg font-bold text-foreground hidden sm:inline">
-              DevFlow
+              DevGroup Community
             </span>
           </Link>
 
@@ -169,22 +167,36 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         )}
       </header>
 
-      <main className="container py-6">{children}</main>
+      <main className="container py-6 flex-1">{children}</main>
 
-      <footer className="border-t border-border bg-card/50 mt-12">
+      <footer className="border-t border-border bg-card/95 backdrop-blur-sm mt-auto">
         <div className="container py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-primary">
-                <Code2 className="h-3 w-3 text-primary-foreground" />
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-4">
+              <div className="flex items-center gap-2">
+                <img src="/logo vert.png" alt="DevGroup Community" className="h-6 w-auto" />
+                <span className="font-mono text-sm font-bold text-foreground">DevGroup Community</span>
               </div>
-              <span className="font-mono text-sm font-bold text-foreground">DevFlow</span>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <Link to="/" className="hover:text-foreground transition-colors">Questions</Link>
+                <Link to="/tags" className="hover:text-foreground transition-colors">Tags</Link>
+                <Link to="/users" className="hover:text-foreground transition-colors">Utilisateurs</Link>
+              </div>
             </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <Link to="/" className="hover:text-foreground transition-colors">Questions</Link>
-              <Link to="/tags" className="hover:text-foreground transition-colors">Tags</Link>
-              <Link to="/users" className="hover:text-foreground transition-colors">Utilisateurs</Link>
-              <span>© 2026 DevFlow</span>
+            
+            <div className="w-full border-t border-border pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+              <p>© 2026 DevGroup Community. Tous droits réservés.</p>
+              <p className="flex items-center gap-1">
+                Développé avec ❤️ par{" "}
+                <a 
+                  href="https://devgroup.ga" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-semibold text-primary hover:underline transition-colors"
+                >
+                  DevGroup Africa
+                </a>
+              </p>
             </div>
           </div>
         </div>
