@@ -1,12 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon } from "lucide-react";
+import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserRole } from "@/hooks/useRole";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
+  const { data: role } = useUserRole();
+  const isAdmin = role === "admin" || role === "super_admin";
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -108,6 +111,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <UserIcon className="h-4 w-4" />
                     Mon profil
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-primary hover:bg-secondary transition-colors border-t border-border"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Espace admin
+                    </Link>
+                  )}
                   <button
                     onClick={async () => { await signOut(); navigate("/"); }}
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
