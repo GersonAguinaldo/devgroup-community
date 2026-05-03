@@ -170,7 +170,7 @@ const AskQuestion = () => {
 
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Tags <span className="text-muted-foreground font-normal">(1-5 tags)</span>
+              Tags <span className="text-muted-foreground font-normal">{isQuestion ? "(1-5 tags)" : "(optionnel, max 5)"}</span>
             </label>
 
             {selectedTags.length > 0 && (
