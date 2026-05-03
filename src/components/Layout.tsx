@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield } from "lucide-react";
+import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
