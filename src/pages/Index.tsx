@@ -107,13 +107,38 @@ const Index = () => {
                   <>Résultats pour "<span className="text-primary">{searchFromUrl}</span>"</>
                 ) : activeTag ? (
                   <><span className="text-primary">#</span>{activeTag}</>
-                ) : (
+                ) : typeFilter === "news" ? (
+                  "Actualités"
+                ) : typeFilter === "question" ? (
                   "Questions"
+                ) : (
+                  "Publications"
                 )}
               </h1>
               <p className="text-sm text-muted-foreground mt-0.5">
-                {filtered.length} question{filtered.length > 1 ? "s" : ""}
+                {filtered.length} {typeFilter === "news" ? "actualité" : "publication"}{filtered.length > 1 ? "s" : ""}
               </p>
+
+              <div className="mt-3 flex items-center gap-1 rounded-lg bg-muted p-1 w-fit">
+                {([
+                  { key: "all" as TypeFilter, icon: LayoutGrid, label: "Tout" },
+                  { key: "question" as TypeFilter, icon: MessageSquare, label: "Questions" },
+                  { key: "news" as TypeFilter, icon: Newspaper, label: "News" },
+                ]).map(({ key, icon: Icon, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => updateType(key)}
+                    className={`flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                      typeFilter === key
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex items-center gap-1 rounded-lg bg-muted p-1 self-start">
