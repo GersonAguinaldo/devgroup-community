@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper } from "lucide-react";
+import { Code2, MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, signOut } = useAuth();
   const { data: role } = useUserRole();
   const isAdmin = role === "admin" || role === "super_admin";
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -143,6 +145,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               Connexion
             </Link>
           )}
+
+          <button
+            onClick={toggleTheme}
+            className="rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            aria-label="Changer le thème"
+          >
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

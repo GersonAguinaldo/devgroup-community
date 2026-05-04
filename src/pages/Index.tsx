@@ -42,7 +42,6 @@ const Index = () => {
   };
 
   const filtered = useMemo(() => {
-    setPage(1);
     return questions
       .filter((q) => typeFilter === "all" || q.post_type === typeFilter)
       .filter((q) => !activeTag || q.tags.includes(activeTag))
@@ -61,6 +60,10 @@ const Index = () => {
         if (sortBy === "trending") return b.views - a.views;
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
+  }, [questions, activeTag, searchFromUrl, sortBy, typeFilter]);
+
+  useEffect(() => {
+    setPage(1);
   }, [questions, activeTag, searchFromUrl, sortBy, typeFilter]);
 
   const popularTags = tags.slice(0, 12);

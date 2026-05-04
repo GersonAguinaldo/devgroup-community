@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index.tsx";
 import QuestionDetail from "./pages/QuestionDetail.tsx";
 import AskQuestion from "./pages/AskQuestion.tsx";
@@ -23,33 +24,35 @@ import NotFound from "./pages/NotFound.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/question/:id" element={<QuestionDetail />} />
-            <Route path="/ask" element={<AskQuestion />} />
-            <Route path="/tags" element={<Tags />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/user/:id" element={<UserProfile />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/content" element={<AdminContent />} />
-            <Route path="/admin/reports" element={<AdminReports />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/tags" element={<AdminTags />} />
-            <Route path="/admin/admins" element={<AdminAdmins />} />
-            <Route path="/admin/roadmap" element={<AdminRoadmap />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/question/:id" element={<QuestionDetail />} />
+              <Route path="/ask" element={<AskQuestion />} />
+              <Route path="/tags" element={<Tags />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/user/:id" element={<UserProfile />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/content" element={<AdminContent />} />
+              <Route path="/admin/reports" element={<AdminReports />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/tags" element={<AdminTags />} />
+              <Route path="/admin/admins" element={<AdminAdmins />} />
+              <Route path="/admin/roadmap" element={<AdminRoadmap />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
