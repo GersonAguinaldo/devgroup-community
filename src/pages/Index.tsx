@@ -3,11 +3,13 @@ import { useSearchParams } from "react-router-dom";
 import QuestionCard from "@/components/QuestionCard";
 import Layout from "@/components/Layout";
 import RightSidebar from "@/components/RightSidebar";
-import { Filter, Flame, Clock, TrendingUp, MessageSquare, Loader2, Newspaper, LayoutGrid } from "lucide-react";
+import { Filter, Flame, Clock, TrendingUp, MessageSquare, Loader2, Newspaper, LayoutGrid, UserCheck } from "lucide-react";
 import { useQuestions, useTags } from "@/hooks/useData";
+import { useFollowingIds } from "@/hooks/useFollow";
+import { useAuth } from "@/contexts/AuthContext";
 
 type SortBy = "votes" | "recent" | "trending";
-type TypeFilter = "all" | "question" | "news";
+type TypeFilter = "all" | "question" | "news" | "following";
 
 const PAGE_SIZE = 10;
 
@@ -24,6 +26,8 @@ const Index = () => {
 
   const { data: questions = [], isLoading } = useQuestions();
   const { data: tags = [] } = useTags();
+  const { user } = useAuth();
+  const { data: followingIds = [] } = useFollowingIds();
 
   useEffect(() => {
     setActiveTag(tagFromUrl);
@@ -43,7 +47,11 @@ const Index = () => {
 
   const filtered = useMemo(() => {
     return questions
-      .filter((q) => typeFilter === "all" || q.post_type === typeFilter)
+      .filter((q) => {
+        if (typeFilter === "all") return true;
+        if (typeFilter === "following") return followingIds.includes(q.author_id);
+        return q.post_type === typeFilter;
+      })
       .filter((q) => !activeTag || q.tags.includes(activeTag))
       .filter((q) => {
         if (!searchFromUrl) return true;
@@ -60,7 +68,7 @@ const Index = () => {
         if (sortBy === "trending") return b.views - a.views;
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
-  }, [questions, activeTag, searchFromUrl, sortBy, typeFilter]);
+  }, [questions, activeTag, searchFromUrl, sortBy, typeFilter, followingIds]);
 
   useEffect(() => {
     setPage(1);
@@ -132,10 +140,11 @@ const Index = () => {
 
               <div className="mt-3 flex items-center gap-1 rounded-lg bg-muted p-1 w-fit">
                 {([
-                  { key: "all" as TypeFilter, icon: LayoutGrid, label: "Tout" },
-                  { key: "question" as TypeFilter, icon: MessageSquare, label: "Questions" },
-                  { key: "news" as TypeFilter, icon: Newspaper, label: "News" },
-                ]).map(({ key, icon: Icon, label }) => (
+                  { key: "all" as TypeFilter, icon: LayoutGrid, label: "Tout", show: true },
+                  { key: "question" as TypeFilter, icon: MessageSquare, label: "Questions", show: true },
+                  { key: "news" as TypeFilter, icon: Newspaper, label: "News", show: true },
+                  { key: "following" as TypeFilter, icon: UserCheck, label: "Suivis", show: !!user },
+                ]).filter((b) => b.show).map(({ key, icon: Icon, label }) => (
                   <button
                     key={key}
                     onClick={() => updateType(key)}
