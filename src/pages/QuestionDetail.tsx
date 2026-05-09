@@ -259,6 +259,13 @@ const QuestionDetail = () => {
                       Partager
                     </button>
                   </div>
+
+                  <CommentList
+                    targetType="question"
+                    targetId={question.id}
+                    questionId={question.id}
+                    parentAuthorId={question.author_id}
+                  />
                 </div>
               </div>
             </div>
