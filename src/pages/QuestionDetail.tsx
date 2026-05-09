@@ -312,7 +312,7 @@ const QuestionDetail = () => {
                         <VoteButton totalVotes={answer.votes} targetType="answer" targetId={answer.id} />
                         {isQuestionAuthor ? (
                           <button
-                            onClick={() => handleAcceptAnswer(answer.id, answer.accepted)}
+                            onClick={() => handleAcceptAnswer(answer.id, answer.accepted, answer.author_id)}
                             title={answer.accepted ? "Retirer l'acceptation" : "Accepter cette réponse"}
                             className={`rounded-md p-1 transition-colors ${
                               answer.accepted
@@ -337,7 +337,7 @@ const QuestionDetail = () => {
                           )}
                           {isQuestionAuthor && !answer.accepted && (
                             <button
-                              onClick={() => handleAcceptAnswer(answer.id, false)}
+                              onClick={() => handleAcceptAnswer(answer.id, false, answer.author_id)}
                               className="text-xs text-muted-foreground hover:text-primary"
                             >
                               Accepter
