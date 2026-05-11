@@ -66,6 +66,33 @@ export type Database = {
           },
         ]
       }
+      badges: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          icon: string
+          name: string
+          tier: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description: string
+          icon?: string
+          name: string
+          tier?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          name?: string
+          tier?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           author_id: string
@@ -156,33 +183,51 @@ export type Database = {
       profiles: {
         Row: {
           avatar: string
+          banner_url: string | null
           bio: string | null
           created_at: string
+          github: string | null
           id: string
+          last_seen_at: string
+          linkedin: string | null
           location: string | null
           reputation: number
+          stack: string[]
           updated_at: string
           username: string
+          website: string | null
         }
         Insert: {
           avatar?: string
+          banner_url?: string | null
           bio?: string | null
           created_at?: string
+          github?: string | null
           id: string
+          last_seen_at?: string
+          linkedin?: string | null
           location?: string | null
           reputation?: number
+          stack?: string[]
           updated_at?: string
           username: string
+          website?: string | null
         }
         Update: {
           avatar?: string
+          banner_url?: string | null
           bio?: string | null
           created_at?: string
+          github?: string | null
           id?: string
+          last_seen_at?: string
+          linkedin?: string | null
           location?: string | null
           reputation?: number
+          stack?: string[]
           updated_at?: string
           username?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -320,6 +365,32 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      user_badges: {
+        Row: {
+          awarded_at: string
+          badge_code: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          badge_code: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          badge_code?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_code_fkey"
+            columns: ["badge_code"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       user_bans: {
         Row: {
@@ -483,6 +554,7 @@ export type Database = {
       }
     }
     Functions: {
+      award_badges: { Args: { _user_id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -490,7 +562,9 @@ export type Database = {
         }
         Returns: boolean
       }
+      heartbeat: { Args: never; Returns: undefined }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      recompute_reputation: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "user" | "admin" | "super_admin"

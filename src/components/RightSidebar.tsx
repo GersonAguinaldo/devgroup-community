@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Flame, Award, Zap } from "lucide-react";
 import { useQuestions, useProfiles } from "@/hooks/useData";
+import OnlineDot from "./OnlineDot";
 
 const RightSidebar = () => {
   const { data: questions = [] } = useQuestions();
@@ -68,8 +69,11 @@ const RightSidebar = () => {
                   to={`/user/${user.id}`}
                   className="flex items-center gap-2.5 rounded-md px-3 py-2 hover:bg-secondary/50 transition-colors"
                 >
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground shrink-0">
+                  <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground shrink-0">
                     {user.avatar}
+                    <span className="absolute -bottom-0.5 -right-0.5">
+                      <OnlineDot lastSeenAt={(user as any).last_seen_at} />
+                    </span>
                   </span>
                   <div className="min-w-0">
                     <p className="text-xs font-medium text-foreground truncate">{user.username}</p>

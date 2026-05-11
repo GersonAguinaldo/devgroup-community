@@ -56,11 +56,11 @@ const ROADMAP: Section[] = [
     title: "Identité et reconnaissance",
     subtitle: "Que chacun se sente vu — y compris dans la réputation",
     features: [
-      { name: "Badges automatiques", status: "todo", details: "Premier post, 10 réponses acceptées, 100 votes reçus, Réponse de la semaine, Ancien combattant. Calcul auto + page dédiée." },
-      { name: "Profil enrichi (stack, liens, bannière)", status: "todo", details: "Champs langages/frameworks, GitHub/LinkedIn/site, bannière personnalisable." },
-      { name: "Statut en ligne / Vu il y a X", status: "todo", details: "Heartbeat client, dernier vu affiché sur le profil et à côté du nom." },
-      { name: "Highlight des nouveaux membres", status: "todo", details: "Bandeau 'Bienvenue à @nouveau' sur la home pendant 24-48h après inscription." },
-      { name: "Réputation revisitée", status: "todo", details: "Pondération plus fine : acceptation > vote > simple post. Décroissance pour inactivité." },
+      { name: "Badges automatiques", status: "done", details: "8 badges (premier post, première/10 réponses acceptées, 10/100 votes reçus, contributeur actif, vétéran). Calcul auto via triggers, page /badges, affichage sur le profil." },
+      { name: "Profil enrichi (stack, liens, bannière)", status: "done", details: "Champs stack (technos), GitHub, LinkedIn, site, bannière personnalisable. Édition depuis le profil." },
+      { name: "Statut en ligne / Vu il y a X", status: "done", details: "Heartbeat client toutes les 60s, point vert si actif < 5 min, sinon 'Vu il y a X'. Visible sur profil et top contributeurs." },
+      { name: "Highlight des nouveaux membres", status: "done", details: "Bandeau 'Bienvenue à @nouveau' sur la home pour les inscriptions des dernières 48h." },
+      { name: "Réputation revisitée", status: "done", details: "Pondération : +15 réponse acceptée, +10 par vote sur réponse, +5 par vote sur question, +2 par réponse postée, +1 par question. Recalcul auto à chaque vote/acceptation." },
     ],
   },
   {

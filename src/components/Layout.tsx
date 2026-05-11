@@ -1,9 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette } from "lucide-react";
+import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette, Award } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useHeartbeat } from "@/hooks/useHeartbeat";
 import NotificationBell from "./NotificationBell";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -13,6 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const { data: role } = useUserRole();
   const isAdmin = role === "admin" || role === "super_admin";
   const { theme, toggleTheme, accentColor, setAccentColor } = useTheme();
+  useHeartbeat();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -70,6 +72,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { to: "/?type=news", icon: Newspaper, label: "News", match: "/news" },
     { to: "/tags", icon: TrendingUp, label: "Tags", match: "/tags" },
     { to: "/users", icon: Users, label: "Utilisateurs", match: "/users" },
+    { to: "/badges", icon: Award, label: "Badges", match: "/badges" },
   ];
 
   return (

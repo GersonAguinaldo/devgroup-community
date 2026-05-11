@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import QuestionCard from "@/components/QuestionCard";
 import Layout from "@/components/Layout";
 import RightSidebar from "@/components/RightSidebar";
+import WelcomeBanner from "@/components/WelcomeBanner";
 import { Filter, Flame, Clock, TrendingUp, MessageSquare, Loader2, Newspaper, LayoutGrid, UserCheck } from "lucide-react";
 import { useQuestions, useTags } from "@/hooks/useData";
 import { useFollowingIds } from "@/hooks/useFollow";
@@ -119,6 +120,7 @@ const Index = () => {
         </aside>
 
         <div className="flex-1 min-w-0">
+          <WelcomeBanner />
           <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl font-bold font-mono text-foreground">

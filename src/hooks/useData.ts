@@ -97,7 +97,7 @@ export const useProfiles = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, avatar, bio, location, reputation, created_at")
+        .select("id, username, avatar, bio, location, reputation, created_at, last_seen_at")
         .order("reputation", { ascending: false });
       if (error) throw error;
       return data || [];
