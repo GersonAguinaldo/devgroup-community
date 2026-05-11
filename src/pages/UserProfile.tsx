@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { formatReputation } from "@/components/RightSidebar";
-import { ArrowLeft, MapPin, Calendar, MessageSquare, CheckCircle2, Loader2, Edit3 } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, MessageSquare, CheckCircle2, Loader2, Edit3, Github, Linkedin, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useProfile, useQuestions } from "@/hooks/useData";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { formatDate } from "@/lib/timeAgo";
 import FollowButton from "@/components/FollowButton";
 import { useFollowCounts } from "@/hooks/useFollow";
+import OnlineDot from "@/components/OnlineDot";
+import UserBadges from "@/components/UserBadges";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -23,12 +25,22 @@ const UserProfile = () => {
   const [editing, setEditing] = useState(false);
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
+  const [stack, setStack] = useState("");
+  const [github, setGithub] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [website, setWebsite] = useState("");
+  const [bannerUrl, setBannerUrl] = useState("");
   const [answers, setAnswers] = useState<{ id: string; question_id: string; question_title: string; created_at: string; accepted: boolean; votes: number }[]>([]);
 
   useEffect(() => {
     if (profile) {
       setBio(profile.bio || "");
       setLocation(profile.location || "");
+      setStack(((profile as any).stack || []).join(", "));
+      setGithub((profile as any).github || "");
+      setLinkedin((profile as any).linkedin || "");
+      setWebsite((profile as any).website || "");
+      setBannerUrl((profile as any).banner_url || "");
     }
   }, [profile]);
 
