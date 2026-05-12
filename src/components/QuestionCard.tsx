@@ -52,6 +52,11 @@ const QuestionCard = ({ question, hasAccepted = false }: { question: QuestionRow
                 News
               </span>
             )}
+            {question.post_type === "discussion" && (
+              <span className="mr-2 inline-block rounded-sm bg-accent/15 px-1.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-accent align-middle">
+                Discussion
+              </span>
+            )}
             {question.title}
           </h3>
           <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground line-clamp-2 hidden sm:block">

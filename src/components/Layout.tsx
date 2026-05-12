@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette, Award } from "lucide-react";
+import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette, Award, MessagesSquare, Heart } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
@@ -69,10 +69,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const navLinks = [
     { to: "/", icon: MessageSquare, label: "Questions", match: "/" },
+    { to: "/?type=discussion", icon: MessagesSquare, label: "Discussions", match: "/discussions" },
     { to: "/?type=news", icon: Newspaper, label: "News", match: "/news" },
     { to: "/tags", icon: TrendingUp, label: "Tags", match: "/tags" },
     { to: "/users", icon: Users, label: "Utilisateurs", match: "/users" },
-    { to: "/badges", icon: Award, label: "Badges", match: "/badges" },
+    { to: "/community", icon: Heart, label: "Communauté", match: "/community" },
   ];
 
   return (
@@ -296,9 +297,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Communauté</h3>
                 <ul className="flex flex-col gap-2">
                   <li><Link to="/" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Questions</Link></li>
+                  <li><Link to="/?type=discussion" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Discussions</Link></li>
                   <li><Link to="/?type=news" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Actualités</Link></li>
                   <li><Link to="/tags" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Tags</Link></li>
                   <li><Link to="/users" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Membres</Link></li>
+                  <li><Link to="/community" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Communauté</Link></li>
+                  <li><Link to="/badges" className="text-sm text-foreground/70 hover:text-foreground transition-colors">Badges</Link></li>
                 </ul>
               </div>
 
