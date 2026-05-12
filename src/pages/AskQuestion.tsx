@@ -4,10 +4,10 @@ import Layout from "@/components/Layout";
 import { useTags } from "@/hooks/useData";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { X, AlertCircle, Info, LogIn, MessageSquare, Newspaper } from "lucide-react";
+import { X, AlertCircle, Info, LogIn, MessageSquare, Newspaper, MessagesSquare, BarChart3, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-type PostType = "question" | "news";
+type PostType = "question" | "news" | "discussion";
 
 const AskQuestion = () => {
   const navigate = useNavigate();
@@ -20,6 +20,12 @@ const AskQuestion = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagSearch, setTagSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Poll (optional, only for news/discussion)
+  const [pollEnabled, setPollEnabled] = useState(false);
+  const [pollTitle, setPollTitle] = useState("");
+  const [pollOptions, setPollOptions] = useState<string[]>(["", ""]);
+  const [pollEndsAt, setPollEndsAt] = useState("");
 
   const filteredTags = tags
     .map((t) => t.name)
