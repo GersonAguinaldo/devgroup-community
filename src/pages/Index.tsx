@@ -26,7 +26,7 @@ const Index = () => {
   const [page, setPage] = useState(1);
 
   const { data: questions = [], isLoading } = useQuestions();
-  const { data: tags = [] } = useTags();
+  
   const { user } = useAuth();
   const { data: followingIds = [] } = useFollowingIds();
 
