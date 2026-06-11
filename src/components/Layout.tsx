@@ -1,11 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette, Award, MessagesSquare, Heart } from "lucide-react";
+import { Plus, Search, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Sun, Moon, Palette } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useHeartbeat } from "@/hooks/useHeartbeat";
 import NotificationBell from "./NotificationBell";
+import LeftNav from "./LeftNav";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -67,15 +68,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const navLinks = [
-    { to: "/", icon: MessageSquare, label: "Questions", match: "/" },
-    { to: "/?type=discussion", icon: MessagesSquare, label: "Discussions", match: "/discussions" },
-    { to: "/?type=news", icon: Newspaper, label: "News", match: "/news" },
-    { to: "/tags", icon: TrendingUp, label: "Tags", match: "/tags" },
-    { to: "/users", icon: Users, label: "Utilisateurs", match: "/users" },
-    { to: "/community", icon: Heart, label: "Communauté", match: "/community" },
-  ];
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl">
@@ -87,7 +79,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </span>
           </Link>
 
-          <form onSubmit={handleSearch} className="relative flex-1 max-w-xl">
+          <form onSubmit={handleSearch} className="relative flex-1 max-w-xl ml-auto">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
@@ -98,22 +90,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             />
           </form>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map(({ to, icon: Icon, label, match }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  location.pathname === match
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
-            ))}
-          </nav>
 
           <Link
             to="/ask"
@@ -226,44 +202,37 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden rounded-md p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            className="lg:hidden rounded-md p-1.5 text-muted-foreground hover:text-foreground transition-colors"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-card p-3 animate-fade-in">
-            <nav className="flex flex-col gap-1">
-              {navLinks.map(({ to, icon: Icon, label, match }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                    location.pathname === match
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {label}
-                </Link>
-              ))}
-              {!user && (
-                <Link
-                  to="/auth"
-                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-                >
-                  <LogIn className="h-4 w-4" />
-                  Connexion
-                </Link>
-              )}
-            </nav>
+          <div className="lg:hidden border-t border-border bg-card p-3 animate-fade-in">
+            <LeftNav variant="mobile" />
+            {!user && (
+              <Link
+                to="/auth"
+                className="mt-1 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+              >
+                <LogIn className="h-4 w-4" />
+                Connexion
+              </Link>
+            )}
           </div>
         )}
       </header>
 
-      <main className="container py-6 flex-1">{children}</main>
+      <div className="container flex gap-6 flex-1 py-6">
+        <aside className="hidden lg:block w-56 shrink-0">
+          <div className="sticky top-20">
+            <LeftNav />
+          </div>
+        </aside>
+        <main className="flex-1 min-w-0">{children}</main>
+      </div>
+
 
       {!isAdminPage && !isAuthPage && (
         <footer className="border-t border-border bg-card mt-auto">
