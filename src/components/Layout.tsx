@@ -1,11 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MessageSquare, Plus, Search, TrendingUp, Users, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Newspaper, Sun, Moon, Palette, Award, MessagesSquare, Heart } from "lucide-react";
+import { Plus, Search, Menu, X, LogOut, LogIn, User as UserIcon, Shield, Sun, Moon, Palette } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useRole";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useHeartbeat } from "@/hooks/useHeartbeat";
 import NotificationBell from "./NotificationBell";
+import LeftNav from "./LeftNav";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
