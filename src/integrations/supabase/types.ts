@@ -194,41 +194,6 @@ export type Database = {
           },
         ]
       }
-      community_invitations: {
-        Row: {
-          community_id: string
-          created_at: string
-          id: string
-          invited_by: string
-          invited_user_id: string
-          role: Database["public"]["Enums"]["community_role"]
-        }
-        Insert: {
-          community_id: string
-          created_at?: string
-          id?: string
-          invited_by: string
-          invited_user_id: string
-          role?: Database["public"]["Enums"]["community_role"]
-        }
-        Update: {
-          community_id?: string
-          created_at?: string
-          id?: string
-          invited_by?: string
-          invited_user_id?: string
-          role?: Database["public"]["Enums"]["community_role"]
-        }
-        Relationships: [
-          {
-            foreignKeyName: "community_invitations_community_id_fkey"
-            columns: ["community_id"]
-            isOneToOne: false
-            referencedRelation: "communities"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       follows: {
         Row: {
           created_at: string
@@ -773,10 +738,6 @@ export type Database = {
       }
     }
     Functions: {
-      accept_community_invitation: {
-        Args: { _invitation_id: string }
-        Returns: undefined
-      }
       award_badges: { Args: { _user_id: string }; Returns: undefined }
       community_role_of: {
         Args: { _community_id: string; _user_id: string }
