@@ -23,6 +23,8 @@ import Badges from "./pages/Badges.tsx";
 import Community from "./pages/Community.tsx";
 import Communities from "./pages/Communities.tsx";
 import CommunityDetail from "./pages/CommunityDetail.tsx";
+import CommunityInvite from "./pages/CommunityInvite.tsx";
+import Search from "./pages/Search.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import RouteSeo from "./components/RouteSeo.tsx";
 
