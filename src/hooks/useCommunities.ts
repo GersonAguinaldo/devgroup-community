@@ -345,11 +345,11 @@ export const useAcceptCommunityInviteLink = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (token: string) => {
-      const { data, error } = await supabase.rpc("accept_community_invite_link", {
+      const { data, error } = await (supabase as any).rpc("accept_community_invite_link", {
         _token: token,
       });
       if (error) throw error;
-      return data as string;
+      return data as unknown as string;
     },
     onSuccess: (slug) => {
       qc.invalidateQueries({ queryKey: ["my-memberships"] });
