@@ -50,6 +50,8 @@ const App = () => (
               <Route path="/community" element={<Community />} />
               <Route path="/communities" element={<Communities />} />
               <Route path="/communities/:slug" element={<CommunityDetail />} />
+              <Route path="/invite/community/:token" element={<CommunityInvite />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/user/:id" element={<UserProfile />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/content" element={<AdminContent />} />
