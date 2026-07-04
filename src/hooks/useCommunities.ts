@@ -111,7 +111,7 @@ export const useMyCommunityInvitations = () => {
     queryKey: ["my-community-invitations", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("community_invitations")
         .select("*")
         .eq("invited_user_id", user!.id)
