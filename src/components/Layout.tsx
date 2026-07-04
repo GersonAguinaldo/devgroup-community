@@ -55,9 +55,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate("/");
+      navigate("/search");
     }
   }, [searchQuery, navigate]);
 
