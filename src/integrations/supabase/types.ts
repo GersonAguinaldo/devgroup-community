@@ -354,9 +354,11 @@ export type Database = {
           created_at: string
           github: string | null
           id: string
+          interests: string[]
           last_seen_at: string
           linkedin: string | null
           location: string | null
+          onboarding_done: boolean
           reputation: number
           stack: string[]
           updated_at: string
@@ -370,9 +372,11 @@ export type Database = {
           created_at?: string
           github?: string | null
           id: string
+          interests?: string[]
           last_seen_at?: string
           linkedin?: string | null
           location?: string | null
+          onboarding_done?: boolean
           reputation?: number
           stack?: string[]
           updated_at?: string
@@ -386,9 +390,11 @@ export type Database = {
           created_at?: string
           github?: string | null
           id?: string
+          interests?: string[]
           last_seen_at?: string
           linkedin?: string | null
           location?: string | null
+          onboarding_done?: boolean
           reputation?: number
           stack?: string[]
           updated_at?: string
@@ -443,6 +449,7 @@ export type Database = {
           created_at: string
           id: string
           post_type: string
+          search_tsv: unknown
           title: string
           updated_at: string
           views: number
@@ -455,6 +462,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_type?: string
+          search_tsv?: unknown
           title: string
           updated_at?: string
           views?: number
@@ -467,6 +475,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_type?: string
+          search_tsv?: unknown
           title?: string
           updated_at?: string
           views?: number
@@ -743,6 +752,10 @@ export type Database = {
         Args: { _community_id: string; _user_id: string }
         Returns: Database["public"]["Enums"]["community_role"]
       }
+      complete_onboarding: {
+        Args: { _interests: string[] }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -761,6 +774,37 @@ export type Database = {
         Returns: boolean
       }
       recompute_reputation: { Args: { _user_id: string }; Returns: undefined }
+      search_questions: {
+        Args: {
+          _author?: string
+          _limit?: number
+          _offset?: number
+          _q?: string
+          _resolved?: boolean
+          _since?: string
+          _sort?: string
+          _tag?: string
+          _type?: string
+        }
+        Returns: {
+          answers_count: number
+          author_avatar: string
+          author_id: string
+          author_username: string
+          body: string
+          community_id: string
+          created_at: string
+          has_accepted: boolean
+          id: string
+          post_type: string
+          rank: number
+          tags: string[]
+          title: string
+          updated_at: string
+          views: number
+          votes: number
+        }[]
+      }
     }
     Enums: {
       app_role: "user" | "admin" | "super_admin"
