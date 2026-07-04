@@ -5,7 +5,7 @@ import Seo from "@/components/Seo";
 import QuestionCard from "@/components/QuestionCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useTags } from "@/hooks/useData";
-import type { QuestionWithMeta } from "@/hooks/useData";
+import type { QuestionRow } from "@/hooks/useData";
 import { Search as SearchIcon, Loader2, X } from "lucide-react";
 
 type SortKey = "relevance" | "recent" | "votes";
