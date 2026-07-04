@@ -7,6 +7,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useHeartbeat } from "@/hooks/useHeartbeat";
 import NotificationBell from "./NotificationBell";
 import LeftNav from "./LeftNav";
+import OnboardingWizard from "./OnboardingWizard";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -55,9 +56,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate("/");
+      navigate("/search");
     }
   }, [searchQuery, navigate]);
 
@@ -70,6 +71,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <OnboardingWizard />
       <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl">
         <div className="container flex h-14 items-center gap-3">
           <Link to="/" className="flex items-center gap-2 shrink-0">

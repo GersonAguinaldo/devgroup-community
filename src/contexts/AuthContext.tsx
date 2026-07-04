@@ -9,6 +9,8 @@ interface Profile {
   bio: string;
   location: string;
   reputation: number;
+  onboarding_done?: boolean;
+  interests?: string[];
 }
 
 interface AuthContextValue {
@@ -29,12 +31,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("profiles")
-      .select("id, username, avatar, bio, location, reputation")
+      .select("id, username, avatar, bio, location, reputation, onboarding_done, interests")
       .eq("id", userId)
       .maybeSingle();
-    setProfile(data);
+    setProfile(data as any);
   };
 
   useEffect(() => {

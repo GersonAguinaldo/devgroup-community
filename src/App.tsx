@@ -23,6 +23,8 @@ import Badges from "./pages/Badges.tsx";
 import Community from "./pages/Community.tsx";
 import Communities from "./pages/Communities.tsx";
 import CommunityDetail from "./pages/CommunityDetail.tsx";
+import CommunityInvite from "./pages/CommunityInvite.tsx";
+import Search from "./pages/Search.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import RouteSeo from "./components/RouteSeo.tsx";
 
@@ -48,6 +50,8 @@ const App = () => (
               <Route path="/community" element={<Community />} />
               <Route path="/communities" element={<Communities />} />
               <Route path="/communities/:slug" element={<CommunityDetail />} />
+              <Route path="/invite/community/:token" element={<CommunityInvite />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/user/:id" element={<UserProfile />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/content" element={<AdminContent />} />
