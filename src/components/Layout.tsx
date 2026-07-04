@@ -71,6 +71,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <OnboardingWizard />
       <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl">
         <div className="container flex h-14 items-center gap-3">
           <Link to="/" className="flex items-center gap-2 shrink-0">
