@@ -305,11 +305,11 @@ export function slugify(s: string) {
 export const useCreateCommunityInviteLink = () => {
   return useMutation({
     mutationFn: async (communityId: string) => {
-      const { data, error } = await supabase.rpc("create_community_invite_link", {
+      const { data, error } = await (supabase as any).rpc("create_community_invite_link", {
         _community_id: communityId,
       });
       if (error) throw error;
-      return data as string;
+      return data as unknown as string;
     },
     onError: (error: unknown) =>
       toast.error(getErrorMessage(error) || "Impossible de générer le lien."),
