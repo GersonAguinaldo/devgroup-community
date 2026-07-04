@@ -301,3 +301,65 @@ export function slugify(s: string) {
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
 }
+
+export const useCreateCommunityInviteLink = () => {
+  return useMutation({
+    mutationFn: async (communityId: string) => {
+      const { data, error } = await supabase.rpc("create_community_invite_link", {
+        _community_id: communityId,
+      });
+      if (error) throw error;
+      return data as string;
+    },
+    onError: (error: unknown) =>
+      toast.error(getErrorMessage(error) || "Impossible de générer le lien."),
+  });
+};
+
+export type CommunityInvitePreview = {
+  community_id: string;
+  community_slug: string;
+  community_name: string;
+  community_description: string | null;
+  community_avatar: string | null;
+  community_is_private: boolean;
+  community_member_count: number;
+  inviter_username: string;
+};
+
+export const useCommunityInvitePreview = (token: string | undefined) =>
+  useQuery({
+    queryKey: ["community-invite-preview", token],
+    enabled: !!token,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_community_invite_preview", {
+        _token: token!,
+      });
+      if (error) throw error;
+      const row = Array.isArray(data) ? data[0] : data;
+      return (row as CommunityInvitePreview) || null;
+    },
+  });
+
+export const useAcceptCommunityInviteLink = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const { data, error } = await supabase.rpc("accept_community_invite_link", {
+        _token: token,
+      });
+      if (error) throw error;
+      return data as string;
+    },
+    onSuccess: (slug) => {
+      qc.invalidateQueries({ queryKey: ["my-memberships"] });
+      qc.invalidateQueries({ queryKey: ["communities"] });
+      qc.invalidateQueries({ queryKey: ["community-members"] });
+      qc.invalidateQueries({ queryKey: ["community"] });
+      toast.success("Bienvenue dans la communauté !");
+      if (slug) window.location.href = `/communities/${slug}`;
+    },
+    onError: (error: unknown) =>
+      toast.error(getErrorMessage(error) || "Impossible de rejoindre."),
+  });
+};
