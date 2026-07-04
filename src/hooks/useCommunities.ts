@@ -128,7 +128,7 @@ export const useInviteToCommunity = () => {
   return useMutation({
     mutationFn: async (input: { communityId: string; invitedUserId: string; role: JoinRole }) => {
       if (!user) throw new Error("Connectez-vous");
-      const { error } = await supabase.from("community_invitations").insert({
+      const { error } = await (supabase as any).from("community_invitations").insert({
         community_id: input.communityId,
         invited_user_id: input.invitedUserId,
         invited_by: user.id,
