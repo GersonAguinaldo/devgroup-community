@@ -39,7 +39,7 @@ export default function SearchPage() {
   const [sort, setSort] = useState<SortKey>((params.get("sort") as SortKey) || "relevance");
   const [page, setPage] = useState(0);
 
-  const [rows, setRows] = useState<QuestionWithMeta[]>([]);
+  const [rows, setRows] = useState<QuestionRow[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Sync URL
@@ -74,7 +74,7 @@ export default function SearchPage() {
       if (error) {
         setRows([]);
       } else {
-        setRows((data || []) as QuestionWithMeta[]);
+        setRows((data || []) as QuestionRow[]);
       }
       setLoading(false);
     };
