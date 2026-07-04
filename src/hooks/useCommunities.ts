@@ -332,7 +332,7 @@ export const useCommunityInvitePreview = (token: string | undefined) =>
     queryKey: ["community-invite-preview", token],
     enabled: !!token,
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("get_community_invite_preview", {
+      const { data, error } = await (supabase as any).rpc("get_community_invite_preview", {
         _token: token!,
       });
       if (error) throw error;
