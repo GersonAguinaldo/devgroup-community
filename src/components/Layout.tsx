@@ -7,6 +7,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useHeartbeat } from "@/hooks/useHeartbeat";
 import NotificationBell from "./NotificationBell";
 import LeftNav from "./LeftNav";
+import OnboardingWizard from "./OnboardingWizard";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
