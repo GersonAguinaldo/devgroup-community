@@ -8,6 +8,7 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   communityId: string;
   communityName: string;
+  memberIds?: string[];
 };
 
 export default function InviteCommunityDialog({ open, onOpenChange, communityId, communityName }: Props) {

@@ -111,7 +111,7 @@ export const useMyCommunityInvitations = () => {
     queryKey: ["my-community-invitations", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("community_invitations")
         .select("*")
         .eq("invited_user_id", user!.id)
@@ -128,7 +128,7 @@ export const useInviteToCommunity = () => {
   return useMutation({
     mutationFn: async (input: { communityId: string; invitedUserId: string; role: JoinRole }) => {
       if (!user) throw new Error("Connectez-vous");
-      const { error } = await supabase.from("community_invitations").insert({
+      const { error } = await (supabase as any).from("community_invitations").insert({
         community_id: input.communityId,
         invited_user_id: input.invitedUserId,
         invited_by: user.id,
@@ -152,8 +152,8 @@ export const useRespondToCommunityInvitation = () => {
   return useMutation({
     mutationFn: async (input: { invitationId: string; accept: boolean }) => {
       const { error } = input.accept
-        ? await supabase.rpc("accept_community_invitation", { _invitation_id: input.invitationId })
-        : await supabase.from("community_invitations").delete().eq("id", input.invitationId);
+        ? await (supabase as any).rpc("accept_community_invitation", { _invitation_id: input.invitationId })
+        : await (supabase as any).from("community_invitations").delete().eq("id", input.invitationId);
       if (error) throw error;
       return input.accept;
     },
@@ -301,3 +301,65 @@ export function slugify(s: string) {
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
 }
+
+export const useCreateCommunityInviteLink = () => {
+  return useMutation({
+    mutationFn: async (communityId: string) => {
+      const { data, error } = await (supabase as any).rpc("create_community_invite_link", {
+        _community_id: communityId,
+      });
+      if (error) throw error;
+      return data as unknown as string;
+    },
+    onError: (error: unknown) =>
+      toast.error(getErrorMessage(error) || "Impossible de générer le lien."),
+  });
+};
+
+export type CommunityInvitePreview = {
+  community_id: string;
+  community_slug: string;
+  community_name: string;
+  community_description: string | null;
+  community_avatar: string | null;
+  community_is_private: boolean;
+  community_member_count: number;
+  inviter_username: string;
+};
+
+export const useCommunityInvitePreview = (token: string | undefined) =>
+  useQuery({
+    queryKey: ["community-invite-preview", token],
+    enabled: !!token,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any).rpc("get_community_invite_preview", {
+        _token: token!,
+      });
+      if (error) throw error;
+      const row = Array.isArray(data) ? data[0] : data;
+      return (row as CommunityInvitePreview) || null;
+    },
+  });
+
+export const useAcceptCommunityInviteLink = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const { data, error } = await (supabase as any).rpc("accept_community_invite_link", {
+        _token: token,
+      });
+      if (error) throw error;
+      return data as unknown as string;
+    },
+    onSuccess: (slug) => {
+      qc.invalidateQueries({ queryKey: ["my-memberships"] });
+      qc.invalidateQueries({ queryKey: ["communities"] });
+      qc.invalidateQueries({ queryKey: ["community-members"] });
+      qc.invalidateQueries({ queryKey: ["community"] });
+      toast.success("Bienvenue dans la communauté !");
+      if (slug) window.location.href = `/communities/${slug}`;
+    },
+    onError: (error: unknown) =>
+      toast.error(getErrorMessage(error) || "Impossible de rejoindre."),
+  });
+};
