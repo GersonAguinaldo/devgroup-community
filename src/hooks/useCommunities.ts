@@ -152,8 +152,8 @@ export const useRespondToCommunityInvitation = () => {
   return useMutation({
     mutationFn: async (input: { invitationId: string; accept: boolean }) => {
       const { error } = input.accept
-        ? await supabase.rpc("accept_community_invitation", { _invitation_id: input.invitationId })
-        : await supabase.from("community_invitations").delete().eq("id", input.invitationId);
+        ? await (supabase as any).rpc("accept_community_invitation", { _invitation_id: input.invitationId })
+        : await (supabase as any).from("community_invitations").delete().eq("id", input.invitationId);
       if (error) throw error;
       return input.accept;
     },
