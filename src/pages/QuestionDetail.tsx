@@ -215,6 +215,7 @@ const QuestionDetail = () => {
         }))
     );
     setAnswerBody("");
+    answerDraft.clear();
     toast.success("Réponse publiée !");
     qc.invalidateQueries({ queryKey: ["answers", question.id] });
     qc.invalidateQueries({ queryKey: ["questions"] });
