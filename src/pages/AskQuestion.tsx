@@ -212,6 +212,41 @@ const AskQuestion = () => {
           </ul>
         </div>
 
+        {restored && (
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-foreground">
+            <span>Brouillon restauré automatiquement.</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={dismissRestored}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                OK
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  clearDraft();
+                  setDraft({
+                    postType: "question",
+                    title: "",
+                    body: "",
+                    selectedTags: [],
+                    pollEnabled: false,
+                    pollTitle: "",
+                    pollOptions: ["", ""],
+                    pollEndsAt: "",
+                  });
+                }}
+                className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-muted-foreground hover:text-destructive"
+              >
+                <RotateCcw className="h-3 w-3" />
+                Repartir de zéro
+              </button>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">Titre</label>
@@ -233,12 +268,12 @@ const AskQuestion = () => {
 
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">Description</label>
-            <textarea
+            <MarkdownEditor
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={setBody}
               placeholder="Décrivez votre problème en détail. Utilisez du Markdown et des blocs de code ```"
-              className="w-full h-48 rounded-md border border-border bg-muted p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-y transition-colors font-mono"
-              required
+              minHeight={220}
+              storageKey="devflow.mdmode.ask"
             />
             {body.length > 0 && body.length < 30 && (
               <p className="text-[10px] text-destructive mt-1 flex items-center gap-1">
@@ -248,10 +283,32 @@ const AskQuestion = () => {
             )}
           </div>
 
+          <AIAssistPanel
+            title={title}
+            body={body}
+            postType={postType}
+            onApply={({ title: t, body: b }) => {
+              setTitle(t);
+              setBody(b);
+            }}
+          />
+
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Tags <span className="text-muted-foreground font-normal">{isQuestion ? "(1-5 tags)" : "(optionnel, max 5)"}</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-semibold text-foreground">
+                Tags <span className="text-muted-foreground font-normal">{isQuestion ? "(1-5 tags)" : "(optionnel, max 5)"}</span>
+              </label>
+              <button
+                type="button"
+                onClick={suggestTags}
+                disabled={suggesting || selectedTags.length >= 5}
+                className="flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[11px] font-medium text-foreground hover:border-primary/40 hover:text-primary disabled:opacity-50"
+              >
+                {suggesting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                Suggérer avec l'IA
+              </button>
+            </div>
+
 
             {selectedTags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-2">
