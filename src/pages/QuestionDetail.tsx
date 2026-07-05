@@ -15,6 +15,8 @@ import { timeAgo } from "@/lib/timeAgo";
 import CommentList from "@/components/CommentList";
 import ReportButton from "@/components/ReportButton";
 import MentionTextarea from "@/components/MentionTextarea";
+import { useDraft } from "@/hooks/useDraft";
+import { RotateCcw } from "lucide-react";
 import PollBlock from "@/components/PollBlock";
 import { extractMentions, resolveMentions } from "@/lib/mentions";
 import { notify, notifyMany } from "@/lib/notify";
@@ -29,7 +31,9 @@ const QuestionDetail = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [bookmarked, setBookmarked] = useState(false);
   const [answerSort, setAnswerSort] = useState<"votes" | "recent">("votes");
-  const [answerBody, setAnswerBody] = useState("");
+  const answerDraft = useDraft(`devflow.draft.answer.${id || "unknown"}`, { body: "" });
+  const answerBody = answerDraft.value.body;
+  const setAnswerBody = (v: string) => answerDraft.setValue((d) => ({ ...d, body: v }));
   const [submitting, setSubmitting] = useState(false);
 
   const { data: question, isLoading } = useQuestion(id);
@@ -211,6 +215,7 @@ const QuestionDetail = () => {
         }))
     );
     setAnswerBody("");
+    answerDraft.clear();
     toast.success("Réponse publiée !");
     qc.invalidateQueries({ queryKey: ["answers", question.id] });
     qc.invalidateQueries({ queryKey: ["questions"] });
@@ -451,6 +456,31 @@ const QuestionDetail = () => {
               {!user && (
                 <div className="mb-3 rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
                   <Link to="/auth" className="text-primary hover:underline font-medium">Connectez-vous</Link> pour publier une réponse.
+                </div>
+              )}
+              {answerDraft.restored && (
+                <div className="mb-3 flex items-center justify-between gap-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-foreground">
+                  <span>Brouillon restauré.</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={answerDraft.dismissRestored}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      OK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        answerDraft.clear();
+                        setAnswerBody("");
+                      }}
+                      className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-muted-foreground hover:text-destructive"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                      Repartir de zéro
+                    </button>
+                  </div>
                 </div>
               )}
               <form onSubmit={handleSubmitAnswer}>

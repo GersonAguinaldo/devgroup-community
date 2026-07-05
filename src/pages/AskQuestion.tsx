@@ -4,8 +4,11 @@ import Layout from "@/components/Layout";
 import { useTags } from "@/hooks/useData";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { X, AlertCircle, Info, LogIn, MessageSquare, Newspaper, MessagesSquare, BarChart3, Plus, Trash2 } from "lucide-react";
+import { X, AlertCircle, Info, LogIn, MessageSquare, Newspaper, MessagesSquare, BarChart3, Plus, Trash2, Sparkles, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import AIAssistPanel from "@/components/AIAssistPanel";
+import { useDraft } from "@/hooks/useDraft";
 
 type PostType = "question" | "news" | "discussion";
 
@@ -16,18 +19,30 @@ const AskQuestion = () => {
   const { user } = useAuth();
   const { data: tags = [] } = useTags();
 
-  const [postType, setPostType] = useState<PostType>("question");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const draftKey = `devflow.draft.ask${communityId ? `.c-${communityId}` : ""}`;
+  const { value: draft, setValue: setDraft, restored, dismissRestored, clear: clearDraft } = useDraft(draftKey, {
+    postType: "question" as PostType,
+    title: "",
+    body: "",
+    selectedTags: [] as string[],
+    pollEnabled: false,
+    pollTitle: "",
+    pollOptions: ["", ""] as string[],
+    pollEndsAt: "",
+  });
+  const { postType, title, body, selectedTags, pollEnabled, pollTitle, pollOptions, pollEndsAt } = draft;
+  const setPostType = (v: PostType) => setDraft((d) => ({ ...d, postType: v }));
+  const setTitle = (v: string) => setDraft((d) => ({ ...d, title: v }));
+  const setBody = (v: string) => setDraft((d) => ({ ...d, body: v }));
+  const setSelectedTags = (v: string[]) => setDraft((d) => ({ ...d, selectedTags: v }));
+  const setPollEnabled = (v: boolean) => setDraft((d) => ({ ...d, pollEnabled: v }));
+  const setPollTitle = (v: string) => setDraft((d) => ({ ...d, pollTitle: v }));
+  const setPollOptions = (v: string[]) => setDraft((d) => ({ ...d, pollOptions: v }));
+  const setPollEndsAt = (v: string) => setDraft((d) => ({ ...d, pollEndsAt: v }));
+
   const [tagSearch, setTagSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  // Poll (optional, only for news/discussion)
-  const [pollEnabled, setPollEnabled] = useState(false);
-  const [pollTitle, setPollTitle] = useState("");
-  const [pollOptions, setPollOptions] = useState<string[]>(["", ""]);
-  const [pollEndsAt, setPollEndsAt] = useState("");
+  const [suggesting, setSuggesting] = useState(false);
 
   const filteredTags = tags
     .map((t) => t.name)
@@ -39,6 +54,32 @@ const AskQuestion = () => {
     } else if (selectedTags.length < 5) {
       setSelectedTags([...selectedTags, tag]);
       setTagSearch("");
+    }
+  };
+
+  const suggestTags = async () => {
+    if (title.trim().length < 5 && body.trim().length < 20) {
+      toast.error("Ajoutez un titre et un peu de contenu.");
+      return;
+    }
+    setSuggesting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-suggest-tags", {
+        body: { title, body, availableTags: tags.map((t) => t.name) },
+      });
+      if (error) throw error;
+      const suggested: string[] = Array.isArray(data?.tags) ? data.tags : [];
+      const toAdd = suggested.filter((t) => !selectedTags.includes(t)).slice(0, 5 - selectedTags.length);
+      if (toAdd.length === 0) {
+        toast.info("Aucun nouveau tag pertinent trouvé.");
+      } else {
+        setSelectedTags([...selectedTags, ...toAdd]);
+        toast.success(`${toAdd.length} tag(s) ajouté(s)`);
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "L'assistant n'a pas répondu.");
+    } finally {
+      setSuggesting(false);
     }
   };
 
@@ -63,7 +104,6 @@ const AskQuestion = () => {
       const rows = selectedTags.map((tag_name) => ({ question_id: data.id, tag_name }));
       await supabase.from("question_tags").insert(rows);
     }
-    // Optional poll
     if (pollEnabled && postType !== "question") {
       const cleanOptions = pollOptions.map((o) => o.trim()).filter(Boolean);
       if (pollTitle.trim() && cleanOptions.length >= 2) {
@@ -85,6 +125,7 @@ const AskQuestion = () => {
       }
     }
     setSubmitting(false);
+    clearDraft();
     toast.success(
       postType === "news" ? "Actualité publiée !" :
       postType === "discussion" ? "Discussion publiée !" :
@@ -171,6 +212,41 @@ const AskQuestion = () => {
           </ul>
         </div>
 
+        {restored && (
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-foreground">
+            <span>Brouillon restauré automatiquement.</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={dismissRestored}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                OK
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  clearDraft();
+                  setDraft({
+                    postType: "question",
+                    title: "",
+                    body: "",
+                    selectedTags: [],
+                    pollEnabled: false,
+                    pollTitle: "",
+                    pollOptions: ["", ""],
+                    pollEndsAt: "",
+                  });
+                }}
+                className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-muted-foreground hover:text-destructive"
+              >
+                <RotateCcw className="h-3 w-3" />
+                Repartir de zéro
+              </button>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">Titre</label>
@@ -192,12 +268,12 @@ const AskQuestion = () => {
 
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">Description</label>
-            <textarea
+            <MarkdownEditor
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={setBody}
               placeholder="Décrivez votre problème en détail. Utilisez du Markdown et des blocs de code ```"
-              className="w-full h-48 rounded-md border border-border bg-muted p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-y transition-colors font-mono"
-              required
+              minHeight={220}
+              storageKey="devflow.mdmode.ask"
             />
             {body.length > 0 && body.length < 30 && (
               <p className="text-[10px] text-destructive mt-1 flex items-center gap-1">
@@ -207,10 +283,32 @@ const AskQuestion = () => {
             )}
           </div>
 
+          <AIAssistPanel
+            title={title}
+            body={body}
+            postType={postType}
+            onApply={({ title: t, body: b }) => {
+              setTitle(t);
+              setBody(b);
+            }}
+          />
+
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Tags <span className="text-muted-foreground font-normal">{isQuestion ? "(1-5 tags)" : "(optionnel, max 5)"}</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-semibold text-foreground">
+                Tags <span className="text-muted-foreground font-normal">{isQuestion ? "(1-5 tags)" : "(optionnel, max 5)"}</span>
+              </label>
+              <button
+                type="button"
+                onClick={suggestTags}
+                disabled={suggesting || selectedTags.length >= 5}
+                className="flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[11px] font-medium text-foreground hover:border-primary/40 hover:text-primary disabled:opacity-50"
+              >
+                {suggesting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                Suggérer avec l'IA
+              </button>
+            </div>
+
 
             {selectedTags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-2">
