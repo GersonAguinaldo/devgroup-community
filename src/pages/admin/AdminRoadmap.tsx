@@ -81,14 +81,14 @@ const ROADMAP: Section[] = [
     order: "4",
     title: "Confort d'usage et inclusion",
     subtitle: "Pour que les nouveaux n'aient pas peur de poster",
-    features: [
-      { name: "Onboarding guidé", status: "todo", details: "Après inscription : choisir tags d'intérêt, compléter profil, mini-tour de la plateforme." },
-      { name: "Brouillons automatiques", status: "todo", details: "Sauvegarde locale en cours de rédaction, restauration au retour." },
-      { name: "Mode 'question gentille' (assistant IA)", status: "todo", details: "Avant publication, l'IA suggère : titre plus clair, contexte manquant, code à formater. Utilise Lovable AI." },
-      { name: "Tags suggérés automatiquement", status: "todo", details: "Analyse du contenu via IA pour proposer 3-5 tags pertinents." },
-      { name: "Aperçu Markdown côte-à-côte", status: "todo", details: "Split-view éditeur / rendu pendant la rédaction." },
-      { name: "Recherche améliorée + filtres", status: "todo", details: "Filtres : résolu/non-résolu, tag, auteur, période. Tri par pertinence." },
-    ],
+      features: [
+        { name: "Onboarding guidé", status: "done", details: "Après inscription : choisir tags d'intérêt, compléter profil, mini-tour de la plateforme." },
+        { name: "Brouillons automatiques", status: "done", details: "Sauvegarde locale en cours de rédaction, restauration au retour. Intégré dans AskQuestion et QuestionDetail." },
+        { name: "Mode 'question gentille' (assistant IA)", status: "done", details: "Avant publication, l'IA suggère : titre plus clair, contexte manquant, code à formater. Intégré dans AskQuestion via Lovable AI." },
+        { name: "Tags suggérés automatiquement", status: "done", details: "Analyse du contenu via IA pour proposer 3-5 tags pertinents. Intégré dans AskQuestion." },
+        { name: "Aperçu Markdown côte-à-côte", status: "done", details: "Split-view éditeur / rendu pendant la rédaction. Intégré dans AskQuestion et QuestionDetail." },
+        { name: "Recherche améliorée + filtres", status: "done", details: "Filtres : résolu/non-résolu, tag, auteur, période. Tri par pertinence. Page /search." },
+      ],
   },
   {
     id: "gamification",
