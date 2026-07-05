@@ -31,7 +31,9 @@ const QuestionDetail = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [bookmarked, setBookmarked] = useState(false);
   const [answerSort, setAnswerSort] = useState<"votes" | "recent">("votes");
-  const [answerBody, setAnswerBody] = useState("");
+  const answerDraft = useDraft(`devflow.draft.answer.${id || "unknown"}`, { body: "" });
+  const answerBody = answerDraft.value.body;
+  const setAnswerBody = (v: string) => answerDraft.setValue((d) => ({ ...d, body: v }));
   const [submitting, setSubmitting] = useState(false);
 
   const { data: question, isLoading } = useQuestion(id);
