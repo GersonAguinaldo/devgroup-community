@@ -15,6 +15,8 @@ import { timeAgo } from "@/lib/timeAgo";
 import CommentList from "@/components/CommentList";
 import ReportButton from "@/components/ReportButton";
 import MentionTextarea from "@/components/MentionTextarea";
+import { useDraft } from "@/hooks/useDraft";
+import { RotateCcw } from "lucide-react";
 import PollBlock from "@/components/PollBlock";
 import { extractMentions, resolveMentions } from "@/lib/mentions";
 import { notify, notifyMany } from "@/lib/notify";
