@@ -458,6 +458,31 @@ const QuestionDetail = () => {
                   <Link to="/auth" className="text-primary hover:underline font-medium">Connectez-vous</Link> pour publier une réponse.
                 </div>
               )}
+              {answerDraft.restored && (
+                <div className="mb-3 flex items-center justify-between gap-3 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-foreground">
+                  <span>Brouillon restauré.</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={answerDraft.dismissRestored}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      OK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        answerDraft.clear();
+                        setAnswerBody("");
+                      }}
+                      className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-muted-foreground hover:text-destructive"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                      Repartir de zéro
+                    </button>
+                  </div>
+                </div>
+              )}
               <form onSubmit={handleSubmitAnswer}>
                 <MentionTextarea
                   value={answerBody}
